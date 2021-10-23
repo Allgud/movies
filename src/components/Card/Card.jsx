@@ -12,8 +12,11 @@ const Card = (props) => {
         const date = format(new Date(releaseDate), "MMMM d, yyyy")
 
         const overviewCutter = (text) => {
+            if(!text){
+                return `Something wrong with description. We started fix it ...`
+            }
             if(text.split(' ').length > 20){
-                return text.split(' ').slice(0, 20).join(' ')
+                return text.split(' ').slice(0, 20).concat(["..."]).join(' ')
             }
             return text 
         }

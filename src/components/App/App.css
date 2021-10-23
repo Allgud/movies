@@ -8,6 +8,13 @@
   background-color: #e5e5e5;
 }
 
+.alert {
+  width: 1000px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .wrapper {
   width: 1000px;
   margin: 0 auto;

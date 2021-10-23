@@ -10,8 +10,8 @@ class MovieService {
         if(!response.ok){
             throw new Error(`Couldn't fetch ${url}. Recived status ${response.status}`)
         }
-        // eslint-disable-next-line no-return-await
-        return await response.json()
+        const res = await response.json()
+        return res
     }
     
     getMovies(){
