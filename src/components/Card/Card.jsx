@@ -7,7 +7,9 @@ import './card.css'
 
 const Card = (props) => {
 
-        const { title, releaseDate, overview } = props  
+        const IMAGE_API = 'https://image.tmdb.org/t/p/w1280'
+
+        const { title, releaseDate, overview, poster_path : posterPath } = props  
     
         const date = format(new Date(releaseDate), "MMMM d, yyyy")
 
@@ -23,7 +25,7 @@ const Card = (props) => {
     
     return(
         <div className="card">
-        <img className="card__image" src="#" alt="#" />
+        <img className="card__image" src={IMAGE_API +  posterPath} alt="#" />
         <div className="card__description">
             <div className="description__content">
                 <h5 className="description__title">{ title }</h5>
@@ -50,7 +52,8 @@ const Card = (props) => {
     Card.propTypes = {
         title: PropTypes.string.isRequired,
         releaseDate: PropTypes.string.isRequired,
-        overview: PropTypes.string.isRequired
+        overview: PropTypes.string.isRequired,
+        poster_path: PropTypes.string.isRequired
     }
 
     

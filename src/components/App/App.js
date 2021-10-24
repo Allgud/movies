@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
+import SearchInput from '../SearchInput'
 import Card from '../Card'
-import Spinner from '../Spinner/spinner'
-import AlertMessage from '../Alert/Alert'
+import Spinner from '../Spinner'
+import AlertMessage from '../Alert'
+import Paginator from '../Pagination'
 
 import MovieService from '../../apiclient/Service'
 
@@ -16,7 +18,8 @@ export default class App extends Component {
     data: [], 
     loading: true,
     alert: false,
-    error: null
+    error: null,
+    inputValue: ''
   }
 
    constructor(){
@@ -24,6 +27,14 @@ export default class App extends Component {
     this.moviesList()
   } 
   
+   
+   
+   onSearchInputChange(evt){
+      this.setState({
+        inputValue: evt.target.value
+      })
+   }
+
    moviesList = () => this.movieService
       .getMovies()
       .then(data => {
@@ -31,11 +42,9 @@ export default class App extends Component {
            data: data.results,
            loading: false
         })
-      }).catch(this.onError)
-    
+      }).catch( this.onError )
 
    onError = (err) => {
-     console.log(err);
      this.setState({
        alert: true, 
        loading: false,
@@ -45,11 +54,10 @@ export default class App extends Component {
   
   render(){
 
-     const { data, loading, alert, error } = this.state
-
+     const { data, loading, alert, error, inputValue } = this.state
+     
      const movies = data.map(movie => {
       const { id, title, release_date : releaseDate, overview, ...otherProps } = movie
-      
       return (
         <Card 
           key={ id }
@@ -66,11 +74,16 @@ export default class App extends Component {
       <div className="container">
          <div className="wrapper">
            <div className="alert">
-             { alert ? <AlertMessage 
-               error={ error } 
-             /> : null}
+             { alert ? <AlertMessage error={ error } /> : null}
+             { <SearchInput 
+                value={inputValue}
+                onInputChange={ this.onSearchInputChange }
+               /> }
            </div>
              { loading ? <Spinner /> : movies }
+             { <Paginator
+                  current={1} 
+               /> }
            </div>
       </div>
     );

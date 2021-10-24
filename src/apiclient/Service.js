@@ -15,7 +15,11 @@ class MovieService {
     }
     
     getMovies(){
-       return this.getResource(`/search/movie?api_key=${this.API_KEY}&language=en-US&query=result&page=1&include_adult=false`)
+       return this.getResource(`/movie/popular?api_key=${this.API_KEY}&language=en-US&page=1`)
+    }
+
+    getSearchMovies(str) {
+        return this.getResource(`/search/movie?api_key=${this.API_KEY}&language=en-US&query=${str}&page=1&include_adult=false`)
     }
 
 }

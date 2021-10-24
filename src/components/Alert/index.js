@@ -1,11 +1,3 @@
-import React from 'react'
+import AlertMessage from "./Alert";
 
-import { Alert } from 'antd'
-
-const alert = () => {
-    return (
-        <Alert />
-    )
-}
-
-export default Alert
+export default AlertMessage

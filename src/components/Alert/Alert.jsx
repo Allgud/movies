@@ -6,21 +6,25 @@ import { Alert } from 'antd'
 import "antd/dist/antd.css"
 
 const AlertMessage = (props) => {
-    const { ob } = props
-    console.log(ob);
-    return(
+
+    const { error } = props
+
+    return (
         <Alert 
-            message=""
-            type="warning"
+            message={ error.message }
+            type="error"
             closable
         /> 
     )
-}
+
+    }
 
 AlertMessage.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
-    ob: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired
 }
+
+
     
     export default AlertMessage
 
