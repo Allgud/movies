@@ -9,13 +9,15 @@ const Card = (props) => {
 
         const IMAGE_API = 'https://image.tmdb.org/t/p/w1280'
 
+        const fakePoster = 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
+
         const { title, releaseDate, overview, poster_path : posterPath } = props  
     
         const date = format(new Date(releaseDate), "MMMM d, yyyy")
 
         const overviewCutter = (text) => {
             if(!text){
-                return `Something wrong with description. We started fix it ...`
+                return <span className="nodescription">No description</span>
             }
             if(text.split(' ').length > 20){
                 return text.split(' ').slice(0, 20).concat(["..."]).join(' ')
@@ -25,7 +27,7 @@ const Card = (props) => {
     
     return(
         <div className="card">
-            <img className="card__image" src={IMAGE_API +  posterPath} alt="#" />
+            <img className="card__image" src={posterPath ? IMAGE_API + posterPath : fakePoster} alt="#" />
             <div className="card__description">
                 <div className="description__content">
                     <h5 className="description__title">{ title }</h5>
@@ -47,7 +49,7 @@ const Card = (props) => {
             </div>
         </div>
       )
-    }
+}
 
     Card.propTypes = {
         title: PropTypes.string.isRequired,

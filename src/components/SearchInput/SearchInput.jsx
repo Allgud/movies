@@ -1,30 +1,30 @@
 import React from "react";
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import './searchInput.css'
 
-// eslint-disable-next-line arrow-body-style
-const SearchInput = () => {
+const SearchInput = (props) => {
 
-    // const { onInputChange } = props
+    const { onInputChange, onHandleSubmit } = props
 
     return(
         <form 
-            onSubmit={ (evt) => evt.preventDefault() }
+            onSubmit={ evt => onHandleSubmit(evt) }
         >
             <input 
                 className="search__input"
                 type="text"
                 placeholder="What needs to find?..."
-                onChange={() => {}}
+                onChange={evt => onInputChange(evt)}
             />
         </form>
     )
 }
 
-/* SearchInput.propTypes = {
-    onInputChange: PropTypes.func.isRequired
-} */
+SearchInput.propTypes = {
+    onInputChange: PropTypes.func.isRequired,
+    onHandleSubmit: PropTypes.func.isRequired
+} 
     
 
 

@@ -19,18 +19,39 @@ export default class App extends Component {
     loading: true,
     alert: false,
     error: null,
-    inputValue: ''
+    inputValue: '',
+    search: {
+      current: 1,
+      total: 1
+    }
   }
    
   componentDidMount(){
     this.moviesList()
   }
+
+  onHandleSubmit = (evt) => {
+    const { inputValue } = this.state
+    evt.preventDefault()
+    this.movieService.getSearchMovies(inputValue)
+    .then(data => {
+      this.setState({
+        data: data.results,
+        loading: false, 
+        search: {
+          current: data.page,
+          total: data.total_results
+        }
+      })
+    })
+  }
    
-   onSearchInputChange(evt){
+   onSearchInputChange = (evt) => {
       this.setState({
         inputValue: evt.target.value
       })
    }
+
 
    moviesList = () => this.movieService
       .getMovies()
@@ -51,7 +72,7 @@ export default class App extends Component {
   
   render(){
 
-     const { data, loading, alert, error, inputValue } = this.state
+     const { data, loading, alert, error, inputValue, search: { total, current } } = this.state
      
      const movies = data.map(movie => {
       const { id, title, release_date : releaseDate, overview, ...otherProps } = movie
@@ -75,11 +96,13 @@ export default class App extends Component {
              { <SearchInput 
                 value={ inputValue }
                 onInputChange={ this.onSearchInputChange }
+                onHandleSubmit = { this.onHandleSubmit }
                /> }
            </div>
              { loading ? <Spinner /> : movies }
              { <Paginator
-                  current={1} 
+                  total = { total }
+                  current = { current }
                /> }
            </div>
       </div>
