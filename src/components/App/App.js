@@ -21,13 +21,10 @@ export default class App extends Component {
     error: null,
     inputValue: ''
   }
-
-   constructor(){
-    super()
-    this.moviesList()
-  } 
-  
    
+  componentDidMount(){
+    this.moviesList()
+  }
    
    onSearchInputChange(evt){
       this.setState({
@@ -76,7 +73,7 @@ export default class App extends Component {
            <div className="alert">
              { alert ? <AlertMessage error={ error } /> : null}
              { <SearchInput 
-                value={inputValue}
+                value={ inputValue }
                 onInputChange={ this.onSearchInputChange }
                /> }
            </div>

@@ -2,24 +2,26 @@ class MovieService {
 
     BASE_URL = 'https://api.themoviedb.org/3'
 
-    API_KEY = '0091774d5934d970b4f80690b00729e7'
+    SEARCH_API = `${this.BASE_URL}/search/movie?api_key=0091774d5934d970b4f80690b00729e7&query=`
 
-    async getResource(url) {  
-        const response = await fetch(`${this.BASE_URL}${url}`)
+    FEATURED_API = `${this.BASE_URL}/movie/popular?api_key=0091774d5934d970b4f80690b00729e7&language=en-US&page=1`
+
+    async getResource(api) {  
+        const response = await fetch(api)
 
         if(!response.ok){
-            throw new Error(`Couldn't fetch ${url}. Recived status ${response.status}`)
+            throw new Error(`Couldn't fetch ${api}. Recived status ${response.status}`)
         }
         const res = await response.json()
         return res
     }
     
     getMovies(){
-       return this.getResource(`/movie/popular?api_key=${this.API_KEY}&language=en-US&page=1`)
+       return this.getResource(this.FEATURED_API)
     }
 
     getSearchMovies(str) {
-        return this.getResource(`/search/movie?api_key=${this.API_KEY}&language=en-US&query=${str}&page=1&include_adult=false`)
+        return this.getResource(this.SEARCH_API + str)
     }
 
 }

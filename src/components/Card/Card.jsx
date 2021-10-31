@@ -25,21 +25,21 @@ const Card = (props) => {
     
     return(
         <div className="card">
-        <img className="card__image" src={IMAGE_API +  posterPath} alt="#" />
-        <div className="card__description">
-            <div className="description__content">
-                <h5 className="description__title">{ title }</h5>
-                <div className="released">
-                    <span className="released--date">{ date }</span>
-                </div>
-                <div className="description__genre">
-                <ul>
-                    <li><span>Action</span></li>
-                    <li><span>Drama</span></li>
-                </ul>
-                </div>
-                <div className="description__text">
-                    <p>
+            <img className="card__image" src={IMAGE_API +  posterPath} alt="#" />
+            <div className="card__description">
+                <div className="description__content">
+                    <h5 className="description__title">{ title }</h5>
+                    <div className="released">
+                        <span className="released--date">{ date }</span>
+                    </div>
+                        <div className="description__genre">
+                            <ul>
+                                <li><span>Action</span></li>
+                                <li><span>Drama</span></li>
+                            </ul>
+                        </div>
+                    <div className="description__text">
+                        <p>
                         { overviewCutter(overview) }
                     </p>
                      </div>
