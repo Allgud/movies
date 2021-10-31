@@ -30,10 +30,42 @@ export default class App extends Component {
     this.moviesList()
   }
 
+  moviesList = () => this.movieService
+      .getMovies()
+      .then(data => {
+        this.setState({
+           data: data.results,
+           loading: false
+        })
+      }).catch( this.onError )   
+
   onHandleSubmit = (evt) => {
+    this.setState({ loading:true })
     const { inputValue } = this.state
     evt.preventDefault()
     this.movieService.getSearchMovies(inputValue)
+    .then(data => {
+      this.setState({
+        data: data.results,
+        loading: false, 
+        search: {
+          total: data.total_results
+        }
+      })
+    }).catch(this.onError)
+  }
+   
+   onSearchInputChange = (evt) => {
+      this.setState({
+        inputValue: evt.target.value
+      })
+   }
+
+   onChangePage = (num) => {
+     this.setState({loading: true})
+     const { inputValue } = this.state
+     const page = `&page=${num}`
+    this.movieService.getSearchMovies(inputValue + page)
     .then(data => {
       this.setState({
         data: data.results,
@@ -43,24 +75,8 @@ export default class App extends Component {
           total: data.total_results
         }
       })
-    })
-  }
-   
-   onSearchInputChange = (evt) => {
-      this.setState({
-        inputValue: evt.target.value
-      })
+    }).catch(this.onError)
    }
-
-
-   moviesList = () => this.movieService
-      .getMovies()
-      .then(data => {
-        this.setState({
-           data: data.results,
-           loading: false
-        })
-      }).catch( this.onError )
 
    onError = (err) => {
      this.setState({
@@ -101,6 +117,7 @@ export default class App extends Component {
            </div>
              { loading ? <Spinner /> : movies }
              { <Paginator
+                  onChangePage = { this.onChangePage }
                   total = { total }
                   current = { current }
                /> }

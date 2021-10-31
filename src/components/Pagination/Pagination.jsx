@@ -8,7 +8,7 @@ import "./pagination.css"
 
 const Paginator = (props) => {
 
-    const { total, current } = props
+    const { total, current, onChangePage } = props
    
     return(
         <div className="pagination">
@@ -16,15 +16,20 @@ const Paginator = (props) => {
                 size="small"
                 current={ current }
                 total={ Math.ceil(total / 2) }
-                onChange = {() => {}}
+                onChange = {(evt) => onChangePage(evt)}
             />
         </div>
     )        
 }
 
+Paginator.defaultProps = {
+    current: 1
+}
+
 Paginator.propTypes = {
     total: PropTypes.number.isRequired,
-    current: PropTypes.number.isRequired
+    current: PropTypes.number,
+    onChangePage: PropTypes.func.isRequired
 }
 
 export default Paginator
