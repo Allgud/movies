@@ -9,8 +9,11 @@ class MovieService {
     async getResource(api) {  
         const response = await fetch(api)
 
-        if(!response.ok){
-            throw new Error(`Couldn't fetch ${api}. Recived status ${response.status}`)
+        if(response.status === 422){
+            throw new Error(`Please insert film title`)
+        }
+        if(!response.ok && response.status !== 422){
+            throw new Error(`Received status ${response.status}`)
         }
         const res = await response.json()
         return res

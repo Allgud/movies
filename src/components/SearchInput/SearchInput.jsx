@@ -5,24 +5,21 @@ import './searchInput.css'
 
 const SearchInput = (props) => {
 
-    const { onInputChange, onHandleSubmit } = props
+    const { onHandleSubmit } = props
 
     return(
-        <form 
-            onSubmit={ evt => onHandleSubmit(evt) }
-        >
+        
             <input 
                 className="search__input"
                 type="text"
                 placeholder="What needs to find?..."
-                onChange={evt => onInputChange(evt)}
+                onChange={evt => onHandleSubmit(evt.target.value)}
             />
-        </form>
+        
     )
 }
 
 SearchInput.propTypes = {
-    onInputChange: PropTypes.func.isRequired,
     onHandleSubmit: PropTypes.func.isRequired
 } 
     

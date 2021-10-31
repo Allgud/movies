@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { debounce } from 'lodash'
+
 import SearchInput from '../SearchInput'
 import Card from '../Card'
 import Spinner from '../Spinner'
@@ -30,6 +32,24 @@ export default class App extends Component {
     this.moviesList()
   }
 
+  onHandleSubmit = debounce((text) => {
+    if(!text){
+      this.moviesList()
+    }
+    this.setState({ loading: true })
+    this.movieService.getSearchMovies(text)
+    .then(data => {
+      this.setState({
+        data: data.results,
+        loading: false,
+        inputValue: text, 
+        search: {
+          total: data.total_results
+        }
+      })
+    }).catch(this.onError)
+  }, 500)
+
   moviesList = () => this.movieService
       .getMovies()
       .then(data => {
@@ -39,21 +59,6 @@ export default class App extends Component {
         })
       }).catch( this.onError )   
 
-  onHandleSubmit = (evt) => {
-    this.setState({ loading:true })
-    const { inputValue } = this.state
-    evt.preventDefault()
-    this.movieService.getSearchMovies(inputValue)
-    .then(data => {
-      this.setState({
-        data: data.results,
-        loading: false, 
-        search: {
-          total: data.total_results
-        }
-      })
-    }).catch(this.onError)
-  }
    
    onSearchInputChange = (evt) => {
       this.setState({
@@ -85,6 +90,11 @@ export default class App extends Component {
        error: err
      })
    }
+
+   onCloseAlert = () => {
+     this.setState({ alert: false })
+     this.moviesList()
+   }
   
   render(){
 
@@ -108,19 +118,22 @@ export default class App extends Component {
       <div className="container">
          <div className="wrapper">
            <div className="alert">
-             { alert ? <AlertMessage error={ error } /> : null}
-             { <SearchInput 
-                value={ inputValue }
-                onInputChange={ this.onSearchInputChange }
-                onHandleSubmit = { this.onHandleSubmit }
-               /> }
+             { alert ? 
+                <AlertMessage 
+                  error={ error }
+                  onClose = { this.onCloseAlert }
+                /> 
+              : <SearchInput 
+                  value={ inputValue }
+                  onHandleSubmit = { this.onHandleSubmit }
+                /> }
            </div>
              { loading ? <Spinner /> : movies }
-             { <Paginator
+             { !loading ? <Paginator
                   onChangePage = { this.onChangePage }
                   total = { total }
                   current = { current }
-               /> }
+               /> : null }
            </div>
       </div>
     );
