@@ -1,9 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { format } from 'date-fns'
+
 import './card.css'
 
 const Card = (props) => {
+
+        // 
 
         const IMAGE_API = 'https://image.tmdb.org/t/p/w1280'
 
@@ -21,7 +25,6 @@ const Card = (props) => {
             return text 
         }
 
-
     return(
         <div className="card">
             <img className="card__image" src={!posterPath ? fakePoster : IMAGE_API + posterPath} alt="#" />
@@ -29,7 +32,7 @@ const Card = (props) => {
                 <div className="description__content">
                     <h5 className="description__title">{ title }</h5>
                     <div className="released">
-                        <span className="released--date">{ releaseDate }</span>
+                        <span className="released--date">{ releaseDate ? format(new Date(releaseDate), `MMMM dd, y`) : '...'}</span>
                     </div>
                         <div className="description__genre">
                             <ul>

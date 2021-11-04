@@ -2,9 +2,11 @@ class MovieService {
 
     BASE_URL = 'https://api.themoviedb.org/3'
 
-    SEARCH_API = `${this.BASE_URL}/search/movie?api_key=0091774d5934d970b4f80690b00729e7&query=`
+    API_KEY = `0091774d5934d970b4f80690b00729e7`
 
-    FEATURED_API = `${this.BASE_URL}/movie/popular?api_key=0091774d5934d970b4f80690b00729e7&language=en-US&page=1`
+    SEARCH_API = `${this.BASE_URL}/search/movie?api_key=${this.API_KEY}&query=`
+
+    FEATURED_API = `${this.BASE_URL}/discover/movie?api_key=${this.API_KEY}&sort_by=popularity.desc`
 
     async getResource(api) {  
         const response = await fetch(api)
