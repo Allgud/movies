@@ -1,0 +1,30 @@
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  list-style: none;
+}
+
+input[type='radio'] {
+  display: none;
+}
+
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  padding: 16px;
+  border-bottom: 1px solid lightgrey;
+  box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.09);
+}
+
+.page-title label {
+  cursor: pointer;
+}
+
+.page-title.active {
+  border-bottom: 3px solid #1890ff;
+  color: #1890ff;
+}

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import { debounce } from 'lodash'
 
+import Header from '../Header'
 import SearchInput from '../SearchInput'
 import Card from '../Card'
 import Spinner from '../Spinner'
@@ -25,7 +26,8 @@ export default class App extends Component {
     search: {
       current: 1,
       total: 1
-    }
+    },
+    page: ''
   }
    
   componentDidMount(){
@@ -95,19 +97,22 @@ export default class App extends Component {
      this.setState({ alert: false })
      this.moviesList()
    }
+
+   choosenTab = (evt) => {
+     this.setState({
+       page: evt.target.ariaLabel
+     })
+   }
   
   render(){
 
-     const { data, loading, alert, error, inputValue, search: { total, current } } = this.state
+     const { data, loading, alert, error, inputValue, search: { total, current }, page } = this.state
      
      const movies = data.map(movie => {
-      const { id, title, release_date : releaseDate, overview, ...otherProps } = movie
+      const { id, ...otherProps } = movie
       return (
         <Card 
           key={ id }
-          title={ title }
-          releaseDate = { releaseDate }
-          overview = { overview }
           { ...otherProps }
         />
       )
@@ -117,6 +122,10 @@ export default class App extends Component {
       
       <div className="container">
          <div className="wrapper">
+           <Header 
+              page={ page }
+              pageListener={ this.choosenTab }
+            />
            <div className="alert">
              { alert ? 
                 <AlertMessage 

@@ -16,6 +16,7 @@
 
 .card__description {
   width: 60%;
+  position: relative;
 }
 
 .description__content {
@@ -26,9 +27,27 @@
 }
 
 .description__title {
+  width: 85%;
   font-size: 20px;
   line-height: 22px;
   margin-bottom: 3.5px;
+}
+
+.film__rating {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  padding: 12px;
+  border: 2px solid #e9d100;
+  border-radius: 50%;
+}
+
+.film__rating span {
+  font-size: 12px;
+  display: block;
+  transform: translate(-6.5px, -6px);
 }
 
 .released {
@@ -76,6 +95,20 @@
   font-size: 12px;
   line-height: 22px;
   letter-spacing: -0.2px;
-  overflow: hidden;
+
   padding-right: 10px;
+}
+
+.card__rating {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.ant-rate li {
+  font-size: 16px;
+}
+
+.ant-rate li:not(:last-child) {
+  margin-right: 7px;
 }
