@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import { debounce } from 'lodash'
 
+import { Provider } from '../context'
+
 import Header from '../Header'
 import SearchInput from '../SearchInput'
 import Card from '../Card'
@@ -26,12 +28,19 @@ export default class App extends Component {
     search: {
       current: 1,
       total: 1
-    },
-    page: ''
+    }, 
+    genres: null,
+    active: 'search'
   }
    
   componentDidMount(){
+    this.genresList()
     this.moviesList()
+    this.newGuestSession() 
+  }
+
+  componentWillUnmount(){
+    localStorage.removeItem('id')
   }
 
   onHandleSubmit = debounce((text) => {
@@ -52,6 +61,12 @@ export default class App extends Component {
     }).catch(this.onError)
   }, 500)
 
+  newGuestSession = () => this.movieService
+      .newGuestSession()
+      .then(data => {
+        localStorage.setItem('id', data.guest_session_id)
+      }).catch( this.onError )
+      
   moviesList = () => this.movieService
       .getMovies()
       .then(data => {
@@ -59,12 +74,19 @@ export default class App extends Component {
            data: data.results,
            loading: false
         })
-      }).catch( this.onError )   
-
-   
+      }).catch( this.onError )
+  
+  genresList = () => this.movieService
+      .getMoviesGenres()
+      .then(data => {
+        this.setState({
+          genres: data.genres
+        })
+      }).catch( this.onError )
+      
    onSearchInputChange = (evt) => {
       this.setState({
-        inputValue: evt.target.value
+        inputValue: evt.target.value.trim()
       })
    }
 
@@ -98,45 +120,51 @@ export default class App extends Component {
      this.moviesList()
    }
 
-   choosenTab = (evt) => {
-     this.setState({
-       page: evt.target.ariaLabel
-     })
+   toggleTabs = (str) => {
+        this.setState({
+          active: str
+        })
    }
   
   render(){
 
-     const { data, loading, alert, error, inputValue, search: { total, current }, page } = this.state
+     const { data, loading, alert, error, 
+             inputValue, search: { total, current }, 
+             genres, active } = this.state
      
      const movies = data.map(movie => {
       const { id, ...otherProps } = movie
       return (
         <Card 
           key={ id }
+          id={ id }
           { ...otherProps }
         />
       )
     }) 
 
     return (
-      
-      <div className="container">
-         <div className="wrapper">
-           <Header 
-              page={ page }
-              pageListener={ this.choosenTab }
+      <Provider  value={ genres }>
+       <div className="container">
+          <div className="wrapper">
+            <Header 
+              toggleTabs={ this.toggleTabs }
+              active={ active }
             />
-           <div className="alert">
+            {(active !== 'rated') ? 
+            <SearchInput 
+              value={ inputValue }
+              onHandleSubmit = { this.onHandleSubmit }
+            /> : <div style={{width: '96%', height: '50px'}}/>
+            }   
+            <div className="alert">
              { alert ? 
                 <AlertMessage 
                   error={ error }
                   onClose = { this.onCloseAlert }
                 /> 
-              : <SearchInput 
-                  value={ inputValue }
-                  onHandleSubmit = { this.onHandleSubmit }
-                /> }
-           </div>
+              : null }
+            </div>
              { loading ? <Spinner /> : movies }
              { !loading ? <Paginator
                   onChangePage = { this.onChangePage }
@@ -144,7 +172,8 @@ export default class App extends Component {
                   current = { current }
                /> : null }
            </div>
-      </div>
+        </div>
+      </Provider>
     );
   }
 }

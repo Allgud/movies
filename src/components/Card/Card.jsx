@@ -1,12 +1,15 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { Rate } from 'antd'
 
 import { format } from 'date-fns'
+import Genre from '../Genre'
+import { Consumer } from '../context'
 
 import './card.css'
 
-const Card = (props) => {
+const Card = ({ id, ...otherProps }) => {
 
         const IMAGE_API = 'https://image.tmdb.org/t/p/w1280'
 
@@ -17,25 +20,44 @@ const Card = (props) => {
                 return <span className="nodescription">No description</span>
             }
             if(text.split(' ').length > 20){
-                return text.split(' ').slice(0, 20).concat(["..."]).join(' ')
+                return text.split(' ').slice(0, 15).concat(["..."]).join(' ')
             }
             return text 
         }
 
-        const { ...otherProps } = props
         const { 
                 title, 
                 poster_path : posterPath, 
                 overview, 
                 release_date : releaseDate,
-                vote_average : rating
+                vote_average : rating,
+                genre_ids : genreIds,
               } = otherProps
+        
 
-    return(
+        let ratingColor = ''
+        if(rating < 3){
+            ratingColor += '#E90000'
+        }
+        if(rating >= 3 && rating < 5){
+            ratingColor += '#E97E00'
+        }
+        if(rating >= 5 && rating < 7){
+            ratingColor += '#E9D100'
+        }
+        if(rating >= 7){
+            ratingColor += '#66E900'
+        }
+
+        const handleChange = val => {
+            console.log(val);
+        }
+
+    return(    
         <div className="card">
-            <img className="card__image" src={!posterPath ? fakePoster : IMAGE_API + posterPath} alt="#" />
+            <img className="card__image" src={!posterPath ? fakePoster : IMAGE_API + posterPath} alt={ title } />
             <div className="card__description">
-                <div className="film__rating">
+                <div className="film__rating" style={{ borderColor: ratingColor }}>
                     <span>{ rating.toFixed(1) }</span>
                 </div>
                 <div className="description__content">
@@ -44,10 +66,18 @@ const Card = (props) => {
                         <span className="released--date">{ releaseDate ? format(new Date(releaseDate), `MMMM dd, y`) : '...'}</span>
                     </div>
                         <div className="description__genre">
-                            <ul>
-                                <li><span>Action</span></li>
-                                <li><span>Drama</span></li>
-                            </ul>
+                            
+                                <Consumer>
+                                    {
+                                        (genres) => (
+                                            <Genre 
+                                                genres={ genres }
+                                                genreIds={ genreIds } 
+                                            />
+                                        )
+                                    }
+                                </Consumer>
+                            
                         </div>
                     <div className="description__text">
                         <p>
@@ -56,11 +86,25 @@ const Card = (props) => {
                     </div>
                 </div>
                 <div className="card__rating">
-                   <Rate count={10} />
+                    <Consumer >
+                        {
+                            () => (
+                                <Rate 
+                                    count={10}
+                                    onChange={ handleChange } 
+                                    allowHalf
+                                />
+                            )
+                        }
+                    </Consumer>
                 </div>
             </div>
         </div>
-      )
+    )
+}
+
+Card.propTypes = {
+    id: PropTypes.number.isRequired
 }
 
 export default Card

@@ -5,43 +5,71 @@ import './header.css'
 
 const Header = (props) => {
 
-    const { page, pageListener } = props
-    
-    return(
-        
+    const { toggleTabs, active } = props
+
+    const styleActive = {
+        color: '#1890ff',
+        borderBottom: '3px solid #1890ff'
+    }
+
+    return(        
         <ul 
             className="header"
-            onClick={ evt => pageListener(evt) }
             onKeyPress={() => {}}
-            role="presentation"
-            page={page}
+            role="radiogroup"
+            
         > 
-            <li className='page-title' aria-label="search">
+            <li 
+                className='page-title'
+                style={(active === 'search') ? styleActive : null}
+            >
                 <input 
                     type="radio" 
                     name="page"
                     id="search"
+                    value="search"
+                    checked={ (active === 'search')}
+                    onClick={(evt) => toggleTabs(evt.target.value)}
+                    onChange={() => {}}
                 />
-                <label htmlFor="search">Search</label>
+                <label 
+                    htmlFor="search"
+                >
+                    Search
+                </label>
             </li>
-            <li className='page-title' aria-label="rated">
+            <li 
+                className='page-title'
+                style={(active === 'rated') ? styleActive : null}
+             >
                 <input 
                     type="radio" 
                     name="page"
                     id="rated"
+                    value="rated"
+                    checked={ active === 'rated' }
+                    onClick={(evt) => toggleTabs(evt.target.value)}
+                    onChange={() => {}}
                 />
-                <label htmlFor="rated">Rated</label>
+                <label 
+                    htmlFor="rated"
+                >
+                    Rated
+                </label>
                 
             </li>
         </ul>
     )
 }
 
+Header.defaultProps = {
+    active: "search"
+}
+
 Header.propTypes = {
-    page: PropTypes.string.isRequired,
-    pageListener: PropTypes.func.isRequired
-} 
-    
+    toggleTabs: PropTypes.func.isRequired,
+    active: PropTypes.string
+}
 
 export default Header
 

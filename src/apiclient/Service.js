@@ -8,6 +8,8 @@ class MovieService {
 
     FEATURED_API = `${this.BASE_URL}/discover/movie?api_key=${this.API_KEY}&sort_by=popularity.desc`
 
+    GENRES_API = `${this.BASE_URL}/genre/movie/list?api_key=${this.API_KEY}`
+
     async getResource(api) {  
         const response = await fetch(api)
 
@@ -18,6 +20,7 @@ class MovieService {
             throw new Error(`Received status ${response.status}`)
         }
         const res = await response.json()
+    
         return res
     }
     
@@ -29,6 +32,35 @@ class MovieService {
         return this.getResource(this.SEARCH_API + str)
     }
 
+    getMoviesGenres(){
+        return this.getResource(this.GENRES_API)
+    }
+
+    newGuestSession(){
+        return this.getResource(`${this.BASE_URL}/authentication/guest_session/new?api_key=${this.API_KEY}`)
+    }
+
+    getGuestSession(){
+        return this.getResource(`${this.BASE_URL}/guest_session/${localStorage.getItem('id')}/rated/movies?api_key=${this.API_KEY}&language=en-US&sort_by=created_at.asc`)
+    }
+
+    async postRating(num){
+        const url = `${this.BASE_URL}/movie/580489/rating?api_key=${this.API_KEY}&guest_session_id=${localStorage.getItem('id')}`
+        const body = {value: num}
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+            const data = await response.json()
+            console.log(data);
+        }catch(err){
+            console.log(err);
+        }
+    }
 }
 
 export default MovieService

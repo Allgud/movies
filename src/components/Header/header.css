@@ -24,7 +24,7 @@ input[type='radio'] {
   cursor: pointer;
 }
 
-.page-title.active {
+.active {
   border-bottom: 3px solid #1890ff;
   color: #1890ff;
 }
