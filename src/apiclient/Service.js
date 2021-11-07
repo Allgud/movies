@@ -40,14 +40,14 @@ class MovieService {
         return this.getResource(`${this.BASE_URL}/authentication/guest_session/new?api_key=${this.API_KEY}`)
     }
 
-    getGuestSession(){
+    getRatedMovies(){
         return this.getResource(`${this.BASE_URL}/guest_session/${localStorage.getItem('id')}/rated/movies?api_key=${this.API_KEY}&language=en-US&sort_by=created_at.asc`)
     }
 
-    async postRating(num){
-        const url = `${this.BASE_URL}/movie/580489/rating?api_key=${this.API_KEY}&guest_session_id=${localStorage.getItem('id')}`
+    async postRating(num, movieId){
+        const url = `${this.BASE_URL}/movie/${movieId}/rating?api_key=${this.API_KEY}&guest_session_id=${localStorage.getItem('id')}`
         const body = {value: num}
-        try {
+        
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -56,11 +56,8 @@ class MovieService {
                 }
             })
             const data = await response.json()
-            console.log(data);
-        }catch(err){
-            console.log(err);
-        }
-    }
+            return data   
+    } 
 }
 
 export default MovieService

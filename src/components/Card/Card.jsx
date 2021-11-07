@@ -6,10 +6,13 @@ import { Rate } from 'antd'
 import { format } from 'date-fns'
 import Genre from '../Genre'
 import { Consumer } from '../context'
+import MovieService from '../../apiclient/Service'
 
 import './card.css'
 
 const Card = ({ id, ...otherProps }) => {
+
+        const movieService = new MovieService()
 
         const IMAGE_API = 'https://image.tmdb.org/t/p/w1280'
 
@@ -49,9 +52,10 @@ const Card = ({ id, ...otherProps }) => {
             ratingColor += '#66E900'
         }
 
-        const handleChange = val => {
-            console.log(val);
-        }
+        const rateMovie = (val) => {
+            const movieId = id
+            movieService.postRating(val, movieId)
+        } 
 
     return(    
         <div className="card">
@@ -66,18 +70,16 @@ const Card = ({ id, ...otherProps }) => {
                         <span className="released--date">{ releaseDate ? format(new Date(releaseDate), `MMMM dd, y`) : '...'}</span>
                     </div>
                         <div className="description__genre">
-                            
-                                <Consumer>
-                                    {
-                                        (genres) => (
-                                            <Genre 
-                                                genres={ genres }
-                                                genreIds={ genreIds } 
-                                            />
-                                        )
-                                    }
-                                </Consumer>
-                            
+                            <Consumer>
+                                {
+                                    ({genres}) => (
+                                        <Genre
+                                            genres = { genres }  
+                                            genreIds={ genreIds } 
+                                        />  
+                                    )
+                                }
+                            </Consumer>    
                         </div>
                     <div className="description__text">
                         <p>
@@ -86,12 +88,12 @@ const Card = ({ id, ...otherProps }) => {
                     </div>
                 </div>
                 <div className="card__rating">
-                    <Consumer >
+                    <Consumer>
                         {
                             () => (
                                 <Rate 
                                     count={10}
-                                    onChange={ handleChange } 
+                                    onChange={ rateMovie } 
                                     allowHalf
                                 />
                             )
@@ -106,5 +108,9 @@ const Card = ({ id, ...otherProps }) => {
 Card.propTypes = {
     id: PropTypes.number.isRequired
 }
-
+// Закончил на втором консюмере. Надо снести жанры приходящие из стейта, 
+// передать в провайдер МувиСервис и из него херачить все запросы на месте. Надо доделать :
+// 1. Из рейтинга должна уходить оценка на сервер
+// 2. При клике на вкладку Rated должен подгружаться список оцененых фильмов. Не забыть посмотреть, как эту оценку вытянуть
+// 3. Посмотреть где ещё можно использовать МувиСервис, чтоб разгрузить стейт 
 export default Card

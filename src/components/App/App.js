@@ -29,14 +29,21 @@ export default class App extends Component {
       current: 1,
       total: 1
     }, 
-    genres: null,
-    active: 'search'
+    active: 'search',
+    genres: null
   }
-   
+ 
   componentDidMount(){
     this.genresList()
     this.moviesList()
     this.newGuestSession() 
+  }
+
+  componentDidUpdate(){
+    const { active } = this.state
+    if( active === 'rated' ){
+      this.ratedMovies()
+    }
   }
 
   componentWillUnmount(){
@@ -72,7 +79,11 @@ export default class App extends Component {
       .then(data => {
         this.setState({
            data: data.results,
-           loading: false
+           loading: false,
+           search: {
+             current: 1,
+             total: 1
+           }
         })
       }).catch( this.onError )
   
@@ -83,14 +94,26 @@ export default class App extends Component {
           genres: data.genres
         })
       }).catch( this.onError )
+     
+  ratedMovies = () => this.movieService
+      .getRatedMovies()
+      .then(data => {
+        this.setState({
+          data: data.results,
+          search: {
+            current: data.page,
+            total: data.total_results
+          },
+        })
+      }).catch( this.onError )
       
-   onSearchInputChange = (evt) => {
+  onSearchInputChange = (evt) => {
       this.setState({
         inputValue: evt.target.value.trim()
       })
-   }
+  }
 
-   onChangePage = (num) => {
+  onChangePage = (num) => {
      this.setState({loading: true})
      const { inputValue } = this.state
      const page = `&page=${num}`
@@ -105,32 +128,32 @@ export default class App extends Component {
         }
       })
     }).catch(this.onError)
-   }
+  }
 
-   onError = (err) => {
+  onError = (err) => { 
      this.setState({
        alert: true, 
        loading: false,
        error: err
      })
-   }
+  }
 
-   onCloseAlert = () => {
+  onCloseAlert = () => {
      this.setState({ alert: false })
      this.moviesList()
+  }
+
+  toggleTabs = (str) => {
+      this.setState({
+        active: str,    
+     })
    }
 
-   toggleTabs = (str) => {
-        this.setState({
-          active: str
-        })
-   }
-  
   render(){
 
      const { data, loading, alert, error, 
              inputValue, search: { total, current }, 
-             genres, active } = this.state
+             active, genres} = this.state
      
      const movies = data.map(movie => {
       const { id, ...otherProps } = movie
@@ -144,7 +167,7 @@ export default class App extends Component {
     }) 
 
     return (
-      <Provider  value={ genres }>
+      <Provider  value={{ genres }}>
        <div className="container">
           <div className="wrapper">
             <Header 
