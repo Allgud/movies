@@ -5,7 +5,7 @@ import './header.css'
 
 const Header = (props) => {
 
-    const { toggleTabs, active } = props
+    const { toggleTabs, active, escape } = props
 
     const styleActive = {
         color: '#1890ff',
@@ -15,7 +15,8 @@ const Header = (props) => {
     return(        
         <ul 
             className="header"
-            onKeyPress={() => {}}
+            onKeyPress={ () => {}}
+            onClick={ (evt) => escape(evt) }
             role="radiogroup"
             
         > 
@@ -28,7 +29,7 @@ const Header = (props) => {
                     name="page"
                     id="search"
                     value="search"
-                    checked={ (active === 'search')}
+                    checked={ active === 'search'}
                     onClick={(evt) => toggleTabs(evt.target.value)}
                     onChange={() => {}}
                 />
@@ -63,12 +64,13 @@ const Header = (props) => {
 }
 
 Header.defaultProps = {
-    active: "search"
+    active: "main"
 }
 
 Header.propTypes = {
     toggleTabs: PropTypes.func.isRequired,
-    active: PropTypes.string
+    active: PropTypes.string,
+    escape: PropTypes.func.isRequired
 }
 
 export default Header

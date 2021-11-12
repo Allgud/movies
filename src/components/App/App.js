@@ -29,7 +29,7 @@ export default class App extends Component {
       current: 1,
       total: 1
     }, 
-    active: 'search',
+    active: 'main',
     genres: null
   }
  
@@ -149,6 +149,16 @@ export default class App extends Component {
      })
    }
 
+  escapeToMain = (evt) => {
+    if(evt.target.value !== 'search' && evt.target.value !== 'rated'){
+      this.setState({
+        active: 'main',
+        inputValue: '', 
+      })
+      this.moviesList()
+    }   
+  } 
+
   render(){
 
      const { data, loading, alert, error, 
@@ -162,6 +172,7 @@ export default class App extends Component {
           key={ id }
           id={ id }
           { ...otherProps }
+          service = { this.movieService } 
         />
       )
     }) 
@@ -170,15 +181,17 @@ export default class App extends Component {
       <Provider  value={{ genres }}>
        <div className="container">
           <div className="wrapper">
-            <Header 
+            <Header
+              escape={ this.escapeToMain } 
               toggleTabs={ this.toggleTabs }
               active={ active }
             />
-            {(active !== 'rated') ? 
-            <SearchInput 
-              value={ inputValue }
-              onHandleSubmit = { this.onHandleSubmit }
-            /> : <div style={{width: '96%', height: '50px'}}/>
+            {(active === 'search') ? 
+              <SearchInput 
+                value={ inputValue }
+                onHandleSubmit = { this.onHandleSubmit }
+              /> 
+              : null
             }   
             <div className="alert">
              { alert ? 
